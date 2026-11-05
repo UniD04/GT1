@@ -1,0 +1,8 @@
+{
+  "name": "gothic-template",
+  "version": "1.0.0",
+  "description": "Config-driven gothic jewellery shop template: 3D pieces, video reels, banners, insights and an admin panel. No dependencies.",
+  "private": true,
+  "scripts": { "start": "node server.js", "models": "node gen-models.js" },
+  "engines": { "node": ">=18" }
+}

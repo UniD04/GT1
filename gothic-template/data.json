@@ -1,0 +1,146 @@
+{
+  "site": {},
+  "pieces": [
+    {
+      "id": "sample-ring",
+      "name": "Sample Ring",
+      "metal": "Silver",
+      "gemstone": "Garnet",
+      "size": "Ø 22mm",
+      "price": "€99.00",
+      "color": "#b9b9c6",
+      "description": "Replace this text with a short description of the piece: its story, its materials and how it feels to wear.",
+      "model": "/models/sample-ring.obj",
+      "type": "ring"
+    },
+    {
+      "id": "sample-signet",
+      "name": "Sample Signet Ring",
+      "metal": "Silver",
+      "gemstone": "None",
+      "size": "Ø 24mm",
+      "price": "€119.00",
+      "color": "#a9a9b3",
+      "description": "Replace this text with a short description of the piece.",
+      "model": "/models/sample-signet.obj",
+      "type": "ring"
+    },
+    {
+      "id": "sample-pendant",
+      "name": "Sample Pendant",
+      "metal": "Pewter",
+      "gemstone": "Onyx",
+      "size": "40mm",
+      "price": "€79.00",
+      "color": "#8f8f9a",
+      "description": "Replace this text with a short description of the piece.",
+      "model": "/models/sample-pendant.stl",
+      "type": "pendant"
+    },
+    {
+      "id": "sample-drop",
+      "name": "Sample Drop Pendant",
+      "metal": "Silver",
+      "gemstone": "Amethyst",
+      "size": "38mm",
+      "price": "€89.00",
+      "color": "#c2c2cc",
+      "description": "Replace this text with a short description of the piece.",
+      "model": "/models/sample-drop.obj",
+      "type": "pendant"
+    },
+    {
+      "id": "sample-cross",
+      "name": "Sample Cross",
+      "metal": "Silver",
+      "gemstone": "Moonstone",
+      "size": "48mm",
+      "price": "€109.00",
+      "color": "#b3b3bd",
+      "description": "Replace this text with a short description of the piece.",
+      "model": "/models/sample-cross.stl",
+      "type": "cross"
+    },
+    {
+      "id": "sample-choker",
+      "name": "Sample Choker",
+      "metal": "Blackened silver",
+      "gemstone": "Obsidian",
+      "size": "Ø 125mm",
+      "price": "€129.00",
+      "color": "#4b4b55",
+      "description": "Replace this text with a short description of the piece.",
+      "model": "/models/sample-choker.obj",
+      "type": "choker"
+    }
+  ],
+  "shop": [
+    {
+      "id": "sample-cloth",
+      "name": "Sample Accessory",
+      "price": "€12.00",
+      "color": "#b3b3bd",
+      "icon": "✦",
+      "description": "A placeholder accessory. Edit or delete it in the admin panel.",
+      "category": "accessories"
+    },
+    {
+      "id": "sample-box",
+      "name": "Sample Gift Box",
+      "price": "€29.00",
+      "color": "#6b1020",
+      "icon": "▣",
+      "description": "A placeholder accessory. Edit or delete it in the admin panel.",
+      "category": "accessories"
+    },
+    {
+      "id": "sample-candle",
+      "name": "Sample Extra",
+      "price": "€15.00",
+      "color": "#1c1416",
+      "icon": "✠",
+      "description": "A placeholder item in the Misc category.",
+      "category": "misc"
+    },
+    {
+      "id": "sample-ink",
+      "name": "Another Extra",
+      "price": "€22.00",
+      "color": "#3a1d2a",
+      "icon": "✒",
+      "description": "A placeholder item in the Misc category.",
+      "category": "misc"
+    }
+  ],
+  "banners": {
+    "announcement": {
+      "enabled": true,
+      "kicker": "Announcement",
+      "title": "Your announcement headline",
+      "content": "Use this banner for news: a new collection, a sale or an opening date.\n\nSwitch it off in the admin panel under Banners.",
+      "icon": "raven",
+      "ctaText": "See the collection",
+      "ctaUrl": "/pieces.html",
+      "sparkles": true,
+      "raven": true,
+      "frequency": "session",
+      "delay": 3
+    },
+    "event": {
+      "enabled": true,
+      "kicker": "Event",
+      "title": "Your event title",
+      "content": "Describe the event: a market stall, a workshop or a live demonstration.",
+      "icon": "cathedral",
+      "date": "2026-12-01",
+      "time": "19:00",
+      "location": "Your venue, Your city",
+      "ctaText": "Reserve a place",
+      "ctaUrl": "",
+      "sparkles": true,
+      "bat": true,
+      "frequency": "session",
+      "delay": 3
+    }
+  }
+}

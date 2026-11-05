@@ -1,0 +1,142 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Home</title>
+<script src="/config.js"></script>
+<link rel="stylesheet" href="/theme.css">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/banners.css">
+<link rel="stylesheet" href="/reels.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"}}</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js" integrity="sha384-BXj4dUwqsTW7BsafEOy150542LwVf57RoKjTk3Ay1dXyFXRwipZgJWd1QKIxStwq" crossorigin="anonymous"></script>
+</head><body>
+<main id="app"></main>
+<script src="/app.js"></script>
+<script src="/banners.js"></script>
+<script type="module">
+import { mountHero } from '/viewer.js';
+import { reelHTML, initReels } from '/reels.js';
+const I = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const SOC_ICON = {
+  instagram: I('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r=".8" fill="currentColor"/>'),
+  tiktok: I('<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.4 2.6 2 4.2 5 4.4"/>'),
+  youtube: I('<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10 9.2v5.6l5-2.8z" fill="currentColor"/>'),
+  pinterest: I('<circle cx="12" cy="12" r="9"/><path d="M11 8.5c3-1 5 1 4.4 3.3-.5 2-2 3-3.4 2.3M11.6 9.5 10 17"/>'),
+  star: I('<path d="M12 3l2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/>'),
+};
+loadData().then(d => {
+  document.title = d.site.name;
+  chrome(d, 'home');
+  const s = d.site, W = d.pieces;
+  const slots = [{ x: .27, y: .5, r: -58 }, { x: .74, y: .52, r: -50 }];
+  const ringText = esc((s.heroTitle + ' • ').toUpperCase());
+  // ring radius: glyphs grow outward from the path, so 128 keeps them well inside the shape's 170-unit edge
+  const R = 128;
+  // pasted link: full URLs, mailto: and site paths are used as-is; a bare domain like "3dservices.com" gets https:// in front
+  const rawUrl = (s.ctaUrl || '').trim();
+  const href = /^(https?:\/\/|mailto:|\/)/i.test(rawUrl) ? rawUrl : /^[\w-]+(\.[\w-]+)+([\/?#].*)?$/.test(rawUrl) ? 'https://' + rawUrl : '';
+  const ctaText = (s.ctaText || '').trim();
+  // "Fulfilled by 3D Services" -> small arc line "Fulfilled by" + bold straight line "3D Services" (no "by" in the text: whole text on the arc)
+  const split = ctaText.match(/^(.*?\bby)\s+(.+)$/i), arcPart = split ? split[1] : ctaText, lowPart = split ? split[2] : '';
+  const badge = `<svg viewBox="0 0 200 200" aria-hidden="true"><circle class="disc" cx="100" cy="100" r="100"/>
+    <path id="ctaArc" d="M20 100 A80 80 0 0 1 180 100" fill="none"/>
+    <text id="ctaText" class="arc" font-size="15" letter-spacing="2.5" text-anchor="middle"><textPath href="#ctaArc" startOffset="50%">${esc(arcPart)}</textPath></text>
+    ${lowPart ? `<g class="heart" transform="translate(100 66) scale(1.1)" aria-hidden="true"><path d="M0 14C-26-4-12-22 0-8C12-22 26-4 0 14Z"/></g>` : ''}</svg>`;
+  // always a real link: no address saved yet -> an empty page (blank.html); the admin panel's link replaces it
+  const dest = href || '/blank.html';
+  const cta = ctaText ? `<a class="blob-cta" href="${esc(dest)}" aria-label="${esc(ctaText)}"${/^https?:|^\/blank\.html$/i.test(dest) ? ' target="_blank" rel="noopener"' : ''}>${badge}</a>` : '';
+  const pairCount = Math.ceil(W.length / 2);
+  document.getElementById('app').innerHTML = `
+  <div class="hero-track" id="track" style="height:${100 + (W.length - 1) * 90}vh"><div class="stage${ctaText ? ' has-cta' : ''}" id="stage">
+    <div class="hero-copy"><h1>${esc(s.heroTitle)}</h1><p>${esc(s.heroText)}</p></div>
+    <div class="blob"><svg viewBox="0 0 400 400">
+      <path class="shape" d="M30 400 V190 C30 100 100 52 200 12 C300 52 370 100 370 190 V400Z"/><path class="shape-line" d="M44 400 V192 C44 110 106 66 200 30 C294 66 356 110 356 192 V400"/>
+      <defs><path id="ringPath" d="M200 200m-${R} 0a${R} ${R} 0 1 1 ${2 * R} 0a${R} ${R} 0 1 1-${2 * R} 0"/></defs>
+      <g class="ring" id="ring"><text font-size="38" style="fill:var(--gilt)" style="font-family:var(--font-label)" letter-spacing="2"><textPath href="#ringPath">${ringText}</textPath></text></g></svg></div>
+    ${cta}
+    <div class="scroll-text">${esc(L('scrollText', 'Descend into the dark'))}</div>
+  </div></div>
+  <section class="about"><div class="head"><div class="eyebrow">${esc(L('aboutEyebrow', 'Our story'))}</div><h2>${esc(s.aboutTitle)}</h2><p>${esc(s.aboutText)}</p><br><a class="btn solid" href="/pieces.html">${esc(L('browseAll', 'Browse all pieces'))}</a> <a class="btn" style="color:var(--cream);border-color:var(--cream)" href="/shop.html">${esc(L('visitShop', 'Visit the shop'))}</a></div></section>
+  <section class="reel-teaser"><div class="head"><div class="eyebrow">${esc(L('reelsName', 'The Midnight Reel'))}</div><h2>${esc(L('reelsTitle', 'Jewels in motion'))}</h2><p>${esc(L('reelsTeaserIntro', 'A few pieces, awake in the candlelight.'))}</p></div>
+    <div class="reel-row" id="teasers">${W.slice(0, 3).map((p, i) => reelHTML(p, i, true)).join('')}</div>
+    <p style="text-align:center;margin-top:40px"><a class="btn solid" href="/reels.html">${esc(L('reelsEnter', 'Enter the reel'))}</a></p></section>
+  <section class="social" id="social"><div class="head"><div class="eyebrow">${esc(L('socialEyebrow', 'Follow the night'))}</div><h2>${esc(s.socialTitle || '')}</h2><p>${esc(s.socialText || '')}</p></div>
+    <div class="social-grid">${(s.social || []).filter(x => x && x.name).map(x => { const u = safeUrl(x.url) || '/blank.html'; return `<a class="soc" href="${esc(u)}" target="_blank" rel="noopener" data-soc="${esc(x.name)}">
+      <span class="soc-ico">${SOC_ICON[x.name.toLowerCase()] || SOC_ICON.star}</span><b>${esc(x.name)}</b><small>${esc(x.handle || '')}</small><em>${esc(L('followLabel', 'Follow'))}</em></a>`; }).join('')}</div></section>`;
+
+  initReels(document.getElementById('teasers'), W.slice(0, 3));
+  document.querySelectorAll('[data-soc]').forEach(a => a.addEventListener('click', () => track('social', a.dataset.soc)));
+  if (window.anime && !matchMedia('(prefers-reduced-motion: reduce)').matches) {            // social cards rise in, one after another, when the section scrolls into view
+    const cards = document.querySelectorAll('.soc'); cards.forEach(c => c.style.opacity = 0);
+    new IntersectionObserver(([e], io) => { if (!e.isIntersecting) return; io.disconnect(); anime({ targets: cards, translateY: [40, 0], opacity: [0, 1], delay: anime.stagger(110), duration: 900, easing: 'easeOutExpo' }); }, { threshold: .25 }).observe(document.querySelector('.social-grid'));
+  }
+
+  // 3D hero
+  mountHero({ stage: document.getElementById('stage'), track: document.getElementById('track'), pieces: W, slots, onOpen: w => location.href = '/piece.html?id=' + encodeURIComponent(w.id) });
+
+  // GSAP timeline: blob unfurls, then the hero copy rises in (custom "silk" ease from CustomEase)
+  gsap.timeline({ defaults: { ease: 'silk' } })
+    .from('.blob svg', { scale: .5, rotation: -40, opacity: 0, duration: 1.6, transformOrigin: '50% 50%' })
+    .from('.hero-copy h1, .hero-copy p, .scroll-text', { y: 30, opacity: 0, duration: 1, stagger: .15 }, .3);
+
+  // fit the ring text to the circle exactly so its end never overlaps its start
+  const ring = document.getElementById('ring'), rt = ring.querySelector('text'), tp = rt.querySelector('textPath');
+  const base = tp.textContent, CIRC = 2 * Math.PI * R - 2;
+  document.fonts.ready.then(() => {
+    rt.setAttribute('font-size', 38); rt.setAttribute('letter-spacing', 0);
+    const len = tp.getComputedTextLength();
+    if (len > CIRC) rt.setAttribute('font-size', 38 * CIRC / len);
+    else {
+      const n = Math.max(1, Math.floor(CIRC / len)); tp.textContent = base.repeat(n);
+      rt.setAttribute('letter-spacing', (CIRC - len * n) / (base.length * n));
+    }
+  });
+  // shrink the badge lines (editable in admin) so they always fit: arc line ≤ ~120° of the arc, straight line ≤ 136 units
+  const ct = document.getElementById('ctaText'), cl = document.getElementById('ctaLow');
+  if (ct) document.fonts.ready.then(() => {
+    const room = (2 * Math.PI / 3) * 80, len = ct.getComputedTextLength();
+    if (len > room) { ct.setAttribute('font-size', Math.max(6, 15 * room / len)); ct.setAttribute('letter-spacing', 1); }
+    if (cl) { const w = cl.getComputedTextLength(); if (w > 136) cl.setAttribute('font-size', 22 * 136 / w); }
+  });
+  // ping the badge: expanding rings + particle burst, on its own every few seconds and again on hover / click
+  const badgeEl = document.querySelector('.blob-cta'), stageEl = document.getElementById('stage');
+  if (badgeEl) {
+    const layer = document.createElement('div'); layer.className = 'burst-layer'; stageEl.appendChild(layer);
+    const palette = () => { const cs = getComputedStyle(document.documentElement); return ['--gilt', '--cream', '--gold', '--maroon'].map(k => cs.getPropertyValue(k).trim()).concat('#ffffff'); };
+    // the badge hops with every ping: squash, spring up, fall back with a little bounce (animates the inner SVG; the badge's own CSS transform stays untouched)
+    const badgeSvg = badgeEl.querySelector('svg');
+    const jump = (h = 24) => {
+      gsap.killTweensOf(badgeSvg);
+      gsap.timeline({ defaults: { transformOrigin: '50% 100%' } })
+        .to(badgeSvg, { scaleY: .9, scaleX: 1.06, duration: .09, ease: 'power1.out' })
+        .to(badgeSvg, { y: -h, scaleY: 1.07, scaleX: .96, duration: .24, ease: 'power2.out' })
+        .to(badgeSvg, { y: 0, scaleY: 1, scaleX: 1, duration: .7, ease: 'bounce.out' });
+    };
+    const burst = (n = 22) => {
+      jump(n > 30 ? 36 : 24);
+      const B = badgeEl.offsetWidth, colors = palette();
+      for (let r = 0; r < 2; r++) {                                                       // two sonar rings, slightly staggered
+        const ring = document.createElement('div'); ring.className = 'burst-ring'; layer.appendChild(ring);
+        gsap.set(ring, { width: B, height: B, x: -B / 2, y: -B / 2, opacity: .85 - r * .25 });
+        gsap.to(ring, { scale: 2.2 + r * .5, opacity: 0, duration: 1.3 + r * .2, delay: r * .18, ease: 'power2.out', onComplete: () => ring.remove() });
+      }
+      for (let i = 0; i < n; i++) {                                                       // particles fan out over the visible (upper) half
+        const dot = document.createElement('div'), size = 4 + Math.random() * 7; dot.className = 'burst-dot'; layer.appendChild(dot);
+        const ang = (-Math.PI) + Math.random() * Math.PI, dist = B * (.55 + Math.random() * .95);
+        gsap.set(dot, { width: size, height: size, x: -size / 2 + Math.cos(ang) * B * .45, y: -size / 2 + Math.sin(ang) * B * .45, background: colors[i % colors.length], opacity: 1 });
+        gsap.to(dot, { x: '+=' + Math.cos(ang) * dist, y: '+=' + (Math.sin(ang) * dist + 14 + Math.random() * 20), scale: 0, opacity: 0, duration: .9 + Math.random() * .7, ease: 'power3.out', onComplete: () => dot.remove() });
+      }
+    };
+    badgeEl.addEventListener('pointerenter', () => burst(18));
+    badgeEl.addEventListener('click', () => { burst(34); track('badge'); });
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setTimeout(() => burst(), 2600);                                                    // first ping once the badge has slid in
+      setInterval(() => { if (!document.hidden && scrollY < innerHeight * .6) burst(); }, 6500);
+    }
+  }
+  // epic banners (announcement / event), switched on in admin → Banners; they open once the hero intro has played
+  Banners.autoStart(d.banners);
+  (function spinRing() { ring.style.transform = `rotate(${scrollY * .18 + performance.now() / 250}deg)`; requestAnimationFrame(spinRing); })();
+});
+</script></body></html>

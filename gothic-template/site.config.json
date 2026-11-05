@@ -1,0 +1,75 @@
+{
+  "adminPassword": "change-me-please",
+  "port": 3000,
+
+  "site": {
+    "name": "Your Shop Name",
+    "tagline": "Your tagline goes here",
+    "heroTitle": "A short, dramatic headline for your jewellery",
+    "heroText": "One or two sentences that introduce your collection. Replace this text in site.config.json or in the admin panel.",
+    "aboutTitle": "About your workshop",
+    "aboutText": "Tell your story here: who makes the jewellery, which materials you use, and what makes your pieces different. Visit the shop for care kits, caskets and other accessories.",
+    "footer": "© Your Shop Name · Your Street, Your City",
+    "contactEmail": "hello@example.com",
+    "ctaText": "Fulfilled by Your Partner",
+    "ctaUrl": "",
+    "socialTitle": "Join the community",
+    "socialText": "New pieces, workshop glimpses and behind-the-scenes. Follow us to see what is next.",
+    "social": [
+      { "name": "Instagram", "handle": "@yourshop", "url": "https://www.instagram.com/" },
+      { "name": "TikTok", "handle": "@yourshop", "url": "https://www.tiktok.com/" },
+      { "name": "YouTube", "handle": "Your Shop", "url": "https://www.youtube.com/" },
+      { "name": "Pinterest", "handle": "yourshop", "url": "https://www.pinterest.com/" }
+    ]
+  },
+
+  "pieceTypes": [
+    { "id": "ring", "label": "Rings" },
+    { "id": "pendant", "label": "Pendants" },
+    { "id": "choker", "label": "Chokers" },
+    { "id": "cross", "label": "Crosses" }
+  ],
+
+  "shopCategories": {
+    "accessories": { "label": "Accessories", "title": "Accessories", "blurb": "Care for, keep and display your jewellery." },
+    "misc": { "label": "Misc", "title": "Miscellaneous", "blurb": "Curious extras from the back of the shop." },
+    "all": { "title": "The Shop", "blurb": "Everything beyond the jewels." }
+  },
+
+  "labels": {
+    "navHome": "Home", "navPieces": "Pieces", "navShop": "Shop", "navReels": "Reels", "footerAdmin": "Admin",
+    "scrollText": "Descend into the dark", "aboutEyebrow": "Our story", "browseAll": "Browse all pieces", "visitShop": "Visit the shop",
+    "collectionEyebrow": "The collection", "collectionTitle": "All pieces", "collectionBlurb": "Every piece in 3D. Hover to spin, click to inspect.",
+    "all": "All", "nothingHere": "Nothing here yet.",
+    "pieceEyebrow": "The piece", "metal": "Metal", "gemstone": "Gemstone", "size": "Size", "price": "Price", "contactUs": "Contact us",
+    "backToAll": "← All pieces", "notFound": "Piece not found", "dragHint": "Drag to rotate", "actualSize": "Actual size", "trueProportions": "True proportions",
+    "shopSuffix": "shop",
+    "reelsName": "The Midnight Reel", "reelsTitle": "Jewels in motion",
+    "reelsIntro": "Scroll down through the dark. Each piece wakes in its own candlelit window as it reaches the middle of the screen.",
+    "reelsTeaserIntro": "A few pieces, awake in the candlelight.", "reelsEnter": "Enter the reel", "scrollCue": "Scroll",
+    "reelsEndEyebrow": "The night is long", "reelsEndTitle": "Find the piece that finds you", "reelsFollow": "Follow us",
+    "viewPiece": "View the piece", "followLabel": "Follow", "socialEyebrow": "Follow the night"
+  },
+
+  "theme": {
+    "defaultMode": "dark",
+    "fonts": {
+      "heading": "'UnifrakturCook', Georgia, serif",
+      "label": "'Cinzel', Georgia, serif",
+      "body": "'EB Garamond', Georgia, serif",
+      "googleFontsUrl": "https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=UnifrakturCook:wght@700&display=swap"
+    },
+    "colors": {
+      "dark": {
+        "background": "#0a0607", "surface": "#130a0d", "text": "#e7dece", "muted": "#a99f90", "accent": "#c23a50", "onAccent": "#fbf3e6",
+        "metal": "#b9b9c6", "bone": "#e6dccb", "panel": "#2a0912", "line": "#3b1c24", "heading": "#eee5d4", "pictureBg": "#150c0f",
+        "header": "#0a0607ee", "field": "#130a0d", "shadow": "#000000b0", "candleGlow": "rgba(255,150,70,.14)", "vignette": "rgba(0,0,0,.7)"
+      },
+      "light": {
+        "background": "#e8dfcd", "surface": "#f0e9d9", "text": "#1f1215", "muted": "#665654", "accent": "#7a1224", "onAccent": "#f6eddc",
+        "metal": "#6c6c78", "bone": "#e6dccb", "panel": "#2b0b13", "line": "#c8baa0", "heading": "#2b0b13", "pictureBg": "#ddd2bd",
+        "header": "#e8dfcdee", "field": "#f6f0e3", "shadow": "#2b0b1355", "candleGlow": "rgba(150,60,40,.10)", "vignette": "rgba(60,20,20,.22)"
+      }
+    }
+  }
+}

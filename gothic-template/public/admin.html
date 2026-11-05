@@ -1,0 +1,148 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin</title>
+<script src="/config.js"></script>
+<link rel="stylesheet" href="/theme.css">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/banners.css">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+</head><body>
+<header><a class="brand" href="/">← Back to site</a><nav><span style="color:var(--gold)">Admin panel</span></nav></header>
+<main id="app"></main>
+<script src="/app.js"></script>
+<script src="/insights.js"></script>
+<script src="/banners.js"></script>
+<script>
+let D, token = sessionStorage.getItem('token'), tab = sessionStorage.getItem('tab') || 'website';
+if (!['website', 'pieces', 'accessories', 'misc', 'banners', 'insights'].includes(tab)) tab = 'website';
+const app = document.getElementById('app');
+const val = (v) => esc(v);
+
+function login(msg = '') {
+  app.innerHTML = `<div class="login"><h2 style="font-size:2.4rem;margin-bottom:8px">Admin login</h2><p style="color:#d96a6a">${esc(msg)}</p>
+    <label>Password</label><input type="password" id="pw" autofocus autocomplete="current-password"><br><br><button class="btn solid" id="go">Enter</button></div>`;
+  const submit = async () => {
+    const r = await fetch('/api/login', { method: 'POST', body: JSON.stringify({ password: document.getElementById('pw').value }) });
+    if (!r.ok) return login('Wrong password');
+    token = (await r.json()).token; sessionStorage.setItem('token', token); start();
+  };
+  document.getElementById('pw').focus();        // autofocus doesn't fire on re-render
+  document.getElementById('go').onclick = submit;
+  // addEventListener + no return value: an `onkeydown` arrow returning false would cancel every keypress
+  document.getElementById('pw').addEventListener('keydown', e => { if (e.key === 'Enter') submit(); });
+}
+
+const field = (label, path, area) => `<div><label>${label}</label>${area
+  ? `<textarea data-p="${path}">${val(get(path))}</textarea>` : `<input data-p="${path}" value="${val(get(path))}">`}</div>`;
+const get = p => p.split('.').reduce((o, k) => o?.[k], D);
+const set = (p, v) => { const k = p.split('.'); const last = k.pop(); k.reduce((o, x) => o[x], D)[last] = v; };
+
+function render() {
+  const piece = (w, i) => `<div class="item"><h4>${esc(w.name) || 'New piece'}<button class="btn danger" data-del="pieces.${i}">Delete</button></h4><div class="row">
+    ${field('Name', `pieces.${i}.name`)}
+    <div><label>Type</label><select data-p="pieces.${i}.type">${(CFG.pieceTypes || []).map(({ id: t, label }) => `<option value="${esc(t)}" ${(w.type || (CFG.pieceTypes[0] || {}).id) === t ? 'selected' : ''}>${esc(label)}</option>`).join('')}</select></div>
+    ${field('Metal', `pieces.${i}.metal`)}${field('Gemstone', `pieces.${i}.gemstone`)}${field('Size (width, e.g. Ø 26mm or 52mm)', `pieces.${i}.size`)}${field('Price', `pieces.${i}.price`)}
+    <div><label>Color</label><input type="color" data-p="pieces.${i}.color" value="${val(safeColor(w.color))}"></div></div>
+    ${field('Description', `pieces.${i}.description`, 1)}
+    <div class="row">${field('3D model path (.stl / .obj / .glb)', `pieces.${i}.model`)}${field('Video URL (optional .mp4 / .webm: plays on the Reels page instead of the 3D turntable)', `pieces.${i}.video`)}<div><label>Upload new STL / OBJ / GLB</label><input type="file" accept=".stl,.obj,.glb" data-up="${i}"></div></div></div>`;
+  const prod = (p, i) => `<div class="item"><h4>${esc(p.name) || 'New product'}<button class="btn danger" data-del="shop.${i}">Delete</button></h4><div class="row">
+    ${field('Name', `shop.${i}.name`)}${field('Price', `shop.${i}.price`)}
+    <div><label>Category</label><select data-p="shop.${i}.category"><option value="accessories" ${p.category !== 'misc' ? 'selected' : ''}>Accessories</option><option value="misc" ${p.category === 'misc' ? 'selected' : ''}>Misc</option></select></div>${field('Icon (emoji / symbol)', `shop.${i}.icon`)}
+    <div><label>Color</label><input type="color" data-p="shop.${i}.color" value="${val(safeColor(p.color, '#9a9aa6'))}"></div></div>
+    ${field('Description', `shop.${i}.description`, 1)}${field('Image URL (optional)', `shop.${i}.image`)}</div>`;
+  const TABS = { website: 'Website', pieces: 'Pieces', accessories: 'Accessories', misc: 'Misc', banners: 'Banners', insights: 'Insights' };
+  const shopTab = c => D.shop.map((p, i) => [p, i]).filter(([p]) => (p.category || 'accessories') === c).map(([p, i]) => prod(p, i)).join('')
+    + `<button class="btn" data-add="shop:${c}">+ Add product</button>`;
+  const on = v => v === true || v === 'true';
+  const bannerCard = (kind, label, sub) => {
+    const b = D.banners[kind], P = 'banners.' + kind, chk = (k, text) => `<label class="chk"><input type="checkbox" data-bool="${P}.${k}" ${on(b[k]) ? 'checked' : ''}> ${text}</label>`;
+    return `<div class="item bncard"><h4><span>${label} <small>${sub}</small></span><label class="switch"><input type="checkbox" data-bool="${P}.enabled" ${on(b.enabled) ? 'checked' : ''}><i></i><span>${on(b.enabled) ? 'On' : 'Off'}</span></label></h4>
+      <div class="row">${field('Small heading (kicker)', P + '.kicker')}${field('Title', P + '.title')}</div>
+      ${field('Content (a blank line starts a new paragraph)', P + '.content', 1)}
+      <label>Icon</label><div class="icon-pick" data-icon-for="${P}.icon">${Object.entries(Banners.ICONS).map(([k, [name]]) => `<button type="button" class="${b.icon === k ? 'on' : ''}" data-icon="${k}" title="${name}" aria-label="${name}">${Banners.icon(k)}</button>`).join('')}</div>
+      ${kind === 'event' ? `<div class="row"><div><label>Date</label><input type="date" data-p="${P}.date" value="${val(b.date)}"></div><div><label>Time</label><input type="time" data-p="${P}.time" value="${val(b.time)}"></div>${field('Location', P + '.location')}</div>` : ''}
+      <div class="row">${field('Button text (blank hides it)', P + '.ctaText')}${field('Button link (https://…, /page or a domain; blank = the button just closes the banner)', P + '.ctaUrl')}</div>
+      <div class="row"><div><label>Show</label><select data-p="${P}.frequency">${[['session', 'Once per visit'], ['once', 'Once per visitor (until you edit it)'], ['always', 'Every time the landing page loads']].map(([v, t]) => `<option value="${v}" ${b.frequency === v ? 'selected' : ''}>${t}</option>`).join('')}</select></div>
+        <div><label>Delay after landing (seconds)</label><input type="number" min="0" max="60" step="0.5" data-p="${P}.delay" value="${val(b.delay)}"></div></div>
+      <div class="chks">${chk('sparkles', 'Silver embers')}${kind === 'announcement' ? chk('raven', 'Raven delivers the letter') : chk('bat', 'A bat circles the sky')}</div>
+      <div class="bn-admin-actions"><button class="btn solid" type="button" data-preview="${kind}">Preview</button> <button class="btn" type="button" data-bn-reset="${kind}">Reset to sample text</button></div></div>`;
+  };
+  const panels = {
+    website: () => `<div class="item"><div class="row">${field('Website name', 'site.name')}${field('Tagline', 'site.tagline')}</div>
+      ${field('Hero title', 'site.heroTitle')}${field('Hero text', 'site.heroText', 1)}${field('About title', 'site.aboutTitle')}${field('About text', 'site.aboutText', 1)}${field('Footer', 'site.footer')}${field('Contact email (used by the "Contact us" button)', 'site.contactEmail')}</div>
+      <div class="item"><h4>“Fulfilled by” button <span style="font-size:.8rem;font-family:'EB Garamond',serif;color:var(--mute)">round badge on the home page</span></h4>
+        <div class="row">${field('Button text (blank hides it; with "… by …" the part before \"by\" goes on the arc and a heart icon replaces the rest)', 'site.ctaText')}${field('Link — paste the website address here', 'site.ctaUrl')}</div>
+        <p id="ctaHint" style="font-size:.8rem;margin-top:8px;color:var(--mute)"></p></div>
+      <div class="item"><h4>Social section <span style="font-size:.8rem;font-family:'EB Garamond',serif;color:var(--mute)">shown on the home page, leave a name blank to hide a row</span></h4>
+        <div class="row">${field('Section title', 'site.socialTitle')}${field('Section text', 'site.socialText')}</div>
+        ${[0, 1, 2, 3].map(n => `<div class="row">${field('Network ' + (n + 1) + ' (Instagram, TikTok, YouTube, Pinterest or any name)', `site.social.${n}.name`)}${field('Handle', `site.social.${n}.handle`)}${field('Link (https://…)', `site.social.${n}.url`)}</div>`).join('')}</div>`,
+    pieces: () => D.pieces.map(piece).join('') + `<button class="btn" data-add="pieces">+ Add piece</button>`,
+    accessories: () => shopTab('accessories'),
+    misc: () => shopTab('misc'),
+    banners: () => '<p class="ins-note" style="margin:0 0 14px">Banners open in the middle of the landing page a few seconds after it loads. Switch one on, edit it, press Preview, then <b>Save changes</b>. If both are on, the announcement comes first, then the event.</p>' + bannerCard('announcement', 'Announcement', 'Raven Post scroll with a wax seal') + bannerCard('event', 'Event appearance', 'night-sky ticket with a cathedral and a circling bat'),
+    insights: () => '<div id="ins" class="ins"><p class="ins-note">Loading insights…</p></div>',
+  };
+  app.innerHTML = `<div class="admin"><h1 style="font-size:3rem">Admin panel</h1>
+    <div class="chips" style="margin:24px 0 8px;justify-content:flex-start">${Object.entries(TABS).map(([k, v]) => `<button class="pill ${k === tab ? 'on' : ''}" data-tab="${k}">${v}</button>`).join('')}</div>
+    <h2>${TABS[tab]}</h2>${panels[tab]()}</div>
+    <div class="savebar"><span id="msg" style="color:var(--mute)">Changes are not live until you save.</span><span><button class="btn" id="out">Log out</button> <button class="btn solid" id="save">Save changes</button></span></div>`;
+  app.querySelectorAll('[data-p]').forEach(el => el.oninput = () => set(el.dataset.p, el.value));
+  // live check of the pasted link: bare domains like "3dservices.com" get https:// added, same as on the home page
+  const hint = document.getElementById('ctaHint'), urlIn = app.querySelector('[data-p="site.ctaUrl"]');
+  if (hint && urlIn) {
+    const norm = s => { s = (s || '').trim(); return /^(https?:\/\/|mailto:|\/)/i.test(s) ? s : /^[\w-]+(\.[\w-]+)+([\/?#].*)?$/.test(s) ? 'https://' + s : ''; };
+    const show = () => { const u = norm(urlIn.value); hint.innerHTML = !urlIn.value.trim() ? 'No link yet: the badge opens an empty page.' : u ? `Visitors will be sent to <a href="${esc(u)}" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline">${esc(u)}</a>` : '<span style="color:#d96a6a">That doesn’t look like a web address.</span>'; };
+    urlIn.addEventListener('input', show); show();
+  }
+  app.querySelectorAll('[data-bool]').forEach(el => el.onchange = () => { set(el.dataset.bool, el.checked); const sw = el.closest('.switch'); if (sw) sw.querySelector('span').textContent = el.checked ? 'On' : 'Off'; });
+  app.querySelectorAll('[data-icon-for]').forEach(w => w.querySelectorAll('[data-icon]').forEach(b => b.onclick = () => { set(w.dataset.iconFor, b.dataset.icon); w.querySelectorAll('[data-icon]').forEach(x => x.classList.toggle('on', x === b)); }));
+  app.querySelectorAll('[data-preview]').forEach(b => b.onclick = () => Banners.show(b.dataset.preview, D.banners[b.dataset.preview], { preview: true }));
+  app.querySelectorAll('[data-bn-reset]').forEach(b => b.onclick = () => { const k = b.dataset.bnReset; if (confirm('Reset this banner to the sample text?')) { D.banners[k] = { ...Banners.defaults[k], enabled: D.banners[k].enabled }; render(); } });
+  app.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { tab = b.dataset.tab; sessionStorage.setItem('tab', tab); render(); window.scrollTo(0, 0); });
+  // changing a product's category moves it to the other tab
+  app.querySelectorAll('select[data-p$=".category"]').forEach(s => s.onchange = render);
+  app.querySelectorAll('[data-del]').forEach(b => b.onclick = () => { const [k, i] = b.dataset.del.split('.'); if (confirm('Delete this item?')) { D[k].splice(i, 1); render(); } });
+  app.querySelectorAll('[data-add]').forEach(b => b.onclick = () => {
+    const [k, cat] = b.dataset.add.split(':'), id = 'item-' + Date.now();
+    D[k].push(k === 'pieces' ? { id, name: 'New piece', type: (CFG.pieceTypes[0] || {}).id || '', metal: '', gemstone: '', size: '', price: '€0.00', color: '#9a9aa6', description: '' }
+                            : { id, name: 'New product', category: cat, price: '€0.00', color: '#9a9aa6', icon: '✦', description: '' });
+    render(); window.scrollTo(0, document.body.scrollHeight);
+  });
+  app.querySelectorAll('[data-up]').forEach(inp => inp.onchange = async () => {
+    const f = inp.files[0]; if (!f) return;
+    const ext = f.name.split('.').pop().toLowerCase();
+    if (!['stl', 'obj', 'glb'].includes(ext)) return alert('Please choose an .stl, .obj or .glb file');
+    const i = inp.dataset.up, name = D.pieces[i].id + '-' + Date.now() + '.' + ext;
+    const r = await fetch('/api/upload?name=' + encodeURIComponent(name), { method: 'PUT', headers: { Authorization: 'Bearer ' + token }, body: await f.arrayBuffer() });
+    if (!r.ok) return alert('Upload failed: ' + ((await r.json().catch(() => ({}))).error || r.status));
+    D.pieces[i].model = '/models/' + name; render();
+    document.getElementById('msg').textContent = 'Model uploaded. Click Save changes to publish.';
+  });
+  if (tab === 'insights') { loadInsights(); document.getElementById('save').style.display = 'none'; document.getElementById('msg').textContent = 'Insights are read-only.'; }
+  document.getElementById('out').onclick = async () => { await fetch('/api/logout', { method: 'POST', headers: { Authorization: 'Bearer ' + token } }).catch(() => {}); sessionStorage.removeItem('token'); token = null; login(); };
+  document.getElementById('save').onclick = async () => {
+    const r = await fetch('/api/data', { method: 'PUT', headers: { Authorization: 'Bearer ' + token }, body: JSON.stringify(D) });
+    if (r.status === 401) return login('Session expired, please log in again');
+    document.getElementById('msg').textContent = r.ok ? 'Saved! Changes are live.' : 'Save failed.';
+  };
+}
+
+// Insights tab: fetch the numbers, draw them (insights.js), and wire the refresh / sample-data buttons
+async function loadInsights() {
+  const el = document.getElementById('ins'); if (!el) return;
+  const auth = { Authorization: 'Bearer ' + token };
+  const r = await fetch('/api/insights', { headers: auth });
+  if (r.status === 401) return login('Session expired, please log in again');
+  if (!r.ok) { el.innerHTML = '<p class="ins-note">Could not load insights.</p>'; return; }
+  const sample = async method => { el.style.opacity = .5; await fetch('/api/insights/demo', { method, headers: auth }); el.style.opacity = 1; loadInsights(); };
+  drawInsights(el, await r.json(), { refresh: loadInsights, demo: () => sample('POST'), clear: () => confirm('Remove all sample data? Real visitor data is kept.') && sample('DELETE') });
+}
+
+async function start() {
+  if (!token) return login();
+  D = await loadData();
+  D.site.social = [...(D.site.social || [])]; while (D.site.social.length < 4) D.site.social.push({ name: '', handle: '', url: '' });
+  D.banners = { announcement: Banners.cfg(D.banners, 'announcement'), event: Banners.cfg(D.banners, 'event') };   // fill in anything missing
+  render();
+}
+start();
+</script></body></html>

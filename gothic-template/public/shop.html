@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop</title>
+<script src="/config.js"></script>
+<link rel="stylesheet" href="/theme.css">
+<link rel="stylesheet" href="/style.css"></head><body><main id="app"></main>
+<script src="/app.js"></script>
+<script>
+const TITLES = { accessories: [CAT('accessories', 'title', 'Accessories'), CAT('accessories', 'blurb', '')], misc: [CAT('misc', 'title', 'Miscellaneous'), CAT('misc', 'blurb', '')] };
+loadData().then(d => {
+  chrome(d, 'shop');
+  const cat = new URLSearchParams(location.search).get('cat'), known = Object.hasOwn(TITLES, cat), [title, blurb] = (known && TITLES[cat]) || [CAT('all', 'title', 'The Shop'), CAT('all', 'blurb', '')];
+  document.title = title + ' · ' + d.site.name;
+  const list = d.shop.filter(p => !known || (p.category || 'accessories') === cat);
+  document.getElementById('app').innerHTML = `<section class="page-top"><div class="head"><div class="eyebrow">${esc(d.site.name)} ${esc(L('shopSuffix', 'shop'))}</div><h2>${esc(title)}</h2><p>${esc(blurb)}</p></div>
+  <div class="chips"><a class="pill ${cat ? '' : 'on'}" href="/shop.html">${esc(L('all', 'All'))}</a><a class="pill ${cat === 'accessories' ? 'on' : ''}" href="/shop.html?cat=accessories">${esc(CAT('accessories', 'label', 'Accessories'))}</a><a class="pill ${cat === 'misc' ? 'on' : ''}" href="/shop.html?cat=misc">${esc(CAT('misc', 'label', 'Misc'))}</a></div>
+  <div class="grid">${list.map(p => `<div class="card">${heartBtn('shop:' + p.id)}<div class="pic" style="background:radial-gradient(circle at 50% 60%,${esc(safeColor(p.color, '#9a9aa6'))}55,var(--pic))">${safeUrl(p.image) ? `<img src="${esc(safeUrl(p.image))}" alt="${esc(p.name)}">` : `<span class="icon">${esc(p.icon || '✦')}</span>`}</div>
+    <div class="info"><div class="meta">${esc(p.price)}</div><h3>${esc(p.name)}</h3><p>${esc(p.description)}</p></div></div>`).join('') || `<p style="text-align:center;color:var(--mute);grid-column:1/-1">${esc(L('nothingHere', 'Nothing here yet.'))}</p>`}</div></section>`;
+});
+</script></body></html>
