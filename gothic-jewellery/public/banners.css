@@ -1,0 +1,83 @@
+/* Epic banners: "Raven Post" announcement scroll + night-sky event ticket. Artwork colours are fixed (they don't follow light/dark mode). */
+.bn-overlay{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px 16px;overflow:auto}
+.bn-backdrop{position:fixed;inset:0;background:radial-gradient(ellipse at center,rgba(34,6,16,.6),rgba(4,2,3,.93));backdrop-filter:blur(5px)}
+.bn-card{position:relative;z-index:2;margin:auto}
+.bn-close{position:absolute;top:10px;right:12px;z-index:6;width:auto;height:auto;padding:8px 10px;border:0;border-radius:0;background:none;color:inherit;cursor:pointer;font:600 1.35rem/1 'EB Garamond',sans-serif;visibility:hidden;animation:bnBlink 1.5s ease-in-out infinite}
+.bn-overlay.ready .bn-close{visibility:visible}
+.bn-close:hover,.bn-close:focus-visible{animation:none;opacity:1;transform:scale(1.2);outline:none}
+@keyframes bnBlink{0%,100%{opacity:1}50%{opacity:.2}}
+@media(prefers-reduced-motion:reduce){.bn-close{animation:none;opacity:.85}}
+.bn-kicker{font:500 .7rem/1.4 'Cinzel',ui-monospace,monospace;letter-spacing:.32em;text-transform:uppercase}
+.bn-card h2{font-family:'UnifrakturCook',Georgia,serif;font-weight:600;line-height:1.05;font-size:clamp(1.9rem,5.2vw,2.7rem);margin:10px 0 0}
+.bn-body{font-family:'EB Garamond',Georgia,serif;font-size:1.3rem;line-height:1.5}
+.bn-body p{margin:.6em 0}
+.bn-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin-top:24px}
+.bn-btn,.bn-ghost{display:inline-block;border-radius:99px;padding:12px 26px;font:600 .76rem/1 'EB Garamond',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:transform .2s,filter .2s,background .2s;text-decoration:none}
+.bn-btn:hover,.bn-ghost:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.bn-later{background:none;border:0;color:inherit;opacity:.65;text-decoration:underline;text-underline-offset:4px;cursor:pointer;font:500 .8rem 'EB Garamond',sans-serif}
+.bn-later:hover{opacity:1}
+.bn-icon{display:block;width:100%;height:100%}
+.bn-spark{position:fixed;left:0;top:0;z-index:4;pointer-events:none;line-height:1;text-shadow:0 0 8px currentColor;opacity:0}
+
+/* ── Announcement: aged-black scroll with a wax seal, delivered by raven ── */
+.bn-ann{--bn-bg:#a41b2a;width:min(94vw,560px);color:#e4dac8}
+.bn-shadow{position:absolute;inset:0;border-radius:4px;box-shadow:0 30px 50px rgba(0,0,0,.5),0 6px 14px rgba(0,0,0,.35);transform-origin:50% 0%;pointer-events:none;z-index:0}
+.bn-paper{z-index:1}
+.bn-ann .bn-close{color:#c9c9d6;top:24px;right:26px}
+.bn-paper{position:relative;padding:58px 46px 66px;text-align:center;border-radius:4px;
+  background:radial-gradient(ellipse at 18% 12%,rgba(255,255,255,.08),transparent 55%),radial-gradient(ellipse at 88% 92%,rgba(150,20,40,.3),transparent 60%),linear-gradient(#2c161b,#150a0d);
+  box-shadow:inset 0 0 70px rgba(0,0,0,.75),inset 0 0 0 1px rgba(185,185,198,.35)}
+.bn-paper::before{content:'';position:absolute;inset:14px;border:1.5px solid rgba(185,185,198,.5);pointer-events:none}
+.bn-paper::after{content:'';position:absolute;inset:20px;border:1px solid rgba(185,185,198,.22);pointer-events:none}
+.bn-orn{position:absolute;width:26px;height:26px;border:2px solid #b9b9c6;border-right:0;border-bottom:0;z-index:1}
+.bn-orn.tl{top:26px;left:26px}.bn-orn.tr{top:26px;right:26px;transform:rotate(90deg)}.bn-orn.bl{bottom:26px;left:26px;transform:rotate(-90deg)}.bn-orn.br{bottom:26px;right:26px;transform:rotate(180deg)}
+.bn-ann .bn-kicker{color:#d4546a}
+.bn-ann h2{color:#f1e8d8;text-shadow:0 0 24px rgba(194,58,80,.5)}
+.bn-rule{display:flex;align-items:center;gap:12px;color:#b9b9c6;margin:14px auto 12px;max-width:260px}
+.bn-rule::before,.bn-rule::after{content:'';flex:1;height:1px;background:currentColor}
+.bn-ann .bn-btn{background:linear-gradient(#9a1c2c,#6e1020);color:#fbf1e0;border:1px solid #b9b9c6;box-shadow:0 8px 18px rgba(90,10,20,.4),inset 0 1px 0 rgba(255,255,255,.2)}
+.bn-ann .bn-later{color:#c9c9d6}
+.bn-roll{position:absolute;left:-16px;right:-16px;height:28px;border-radius:14px;z-index:3;pointer-events:none;
+  background:linear-gradient(#4a4a54,#d0d0dc 38%,#8a8a96 62%,#2b2b33);box-shadow:0 8px 14px rgba(0,0,0,.4)}
+.bn-roll.top{top:-14px}.bn-roll.bot{bottom:-14px}
+.bn-roll::before,.bn-roll::after{content:'';position:absolute;top:2px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle,#e8e8f2 0 28%,#7a7a86 30% 60%,#3a3a44 62%)}
+.bn-roll::before{left:-6px}.bn-roll::after{right:-6px}
+.bn-seal{position:absolute;left:50%;bottom:-40px;width:80px;height:80px;margin-left:-40px;z-index:4;display:grid;place-items:center;color:#ffd7cd;--bn-bg:#a41b2a;
+  border-radius:50% 46% 52% 48%/48% 52% 46% 54%;background:radial-gradient(circle at 34% 28%,#e2495a,#9a1626 58%,#5d0b15);
+  box-shadow:0 10px 18px rgba(0,0,0,.45),inset 0 0 0 5px rgba(255,255,255,.1),inset 0 -6px 10px rgba(0,0,0,.3)}
+.bn-seal .bn-icon{width:46px;height:46px;opacity:.92;filter:drop-shadow(0 1px 0 rgba(0,0,0,.35))}
+.bn-raven{position:fixed;left:0;top:0;z-index:3;width:130px;color:#2b2b35;--bn-paper:#e6dccb;opacity:0;pointer-events:none;filter:drop-shadow(0 0 10px rgba(185,185,198,.6)) drop-shadow(0 12px 14px rgba(0,0,0,.6))}
+.bn-raven svg{width:100%;display:block;overflow:visible}
+
+/* ── Event appearance: starry night, moonlit cathedral, a bat, ticket stub ── */
+.bn-evt{--bn-bg:#120508;width:min(94vw,640px);border-radius:22px;overflow:hidden;color:#f4ead2;
+  background:linear-gradient(180deg,#050304 0%,#14070d 46%,#2e0c18 82%,#4a1424 100%);
+  box-shadow:0 0 0 1px rgba(185,185,198,.6),0 0 0 7px rgba(8,4,6,.92),0 0 0 8px rgba(185,185,198,.35),0 40px 90px rgba(0,0,0,.65)}
+.bn-evt .bn-close{color:#d9d9e4;top:14px;right:16px}
+.bn-sky{position:absolute;inset:0;pointer-events:none}
+.bn-sky i{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:#fff;opacity:.5;box-shadow:0 0 6px rgba(255,255,255,.7)}
+.bn-beam{position:absolute;left:-20%;bottom:0;width:140%;height:115%;pointer-events:none;background:radial-gradient(ellipse at 50% 100%,rgba(205,210,240,.34),rgba(205,210,240,.07) 42%,transparent 66%)}
+.bn-cathedral{position:absolute;left:0;right:0;bottom:-12px;margin:0 auto;width:min(78%,340px);height:auto;aspect-ratio:1;color:#040203;--bn-bg:#e9a36a;opacity:.6;pointer-events:none;filter:drop-shadow(0 0 10px rgba(255,160,90,.5))}
+.bn-bat{position:absolute;left:0;top:0;width:46px;margin:-23px 0 0 -23px;z-index:3;color:#8f8f9f;--bn-bg:#2a0912;pointer-events:none;filter:drop-shadow(0 0 9px rgba(194,58,80,.75))}
+.bn-evt-main{position:relative;z-index:2;padding:48px 40px 56px;text-align:center;text-shadow:0 2px 12px rgba(5,6,30,.7)}
+.bn-badge{width:64px;height:64px;margin:0 auto 14px;padding:15px;border-radius:50%;color:#c9c9d6;--bn-bg:#120508;border:1.5px solid rgba(185,185,198,.7);background:rgba(10,4,6,.55);box-shadow:0 0 26px rgba(194,58,80,.35),inset 0 0 14px rgba(185,185,198,.15)}
+.bn-evt .bn-kicker{color:#d4546a}
+.bn-evt h2{background:linear-gradient(90deg,#e8e8f2,#fff,#c9a0a8,#e8e8f2);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;animation:bnShine 5s linear infinite}
+@keyframes bnShine{to{background-position:-220% center}}
+.bn-evt .bn-body{color:#ece1ca}
+.bn-ticket{display:flex;align-items:stretch;margin:22px auto 2px;max-width:450px;text-align:left;border-radius:12px;color:#2a0f16;text-shadow:none;background:linear-gradient(135deg,#ece3d2,#c4b9a6);box-shadow:0 12px 30px rgba(0,0,0,.45)}
+.bn-ticket .stub{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 20px;border-right:2px dashed rgba(90,60,20,.45)}
+.bn-ticket .stub::before,.bn-ticket .stub::after{content:'';position:absolute;right:-8px;width:14px;height:14px;border-radius:50%;background:#1a0a0e}
+.bn-ticket .stub::before{top:-7px}.bn-ticket .stub::after{bottom:-7px}
+.bn-ticket .stub b{font:600 2.6rem/1 'UnifrakturCook',Georgia,serif}
+.bn-ticket .stub span{font:500 .72rem 'Cinzel',monospace;letter-spacing:.22em;text-transform:uppercase}
+.bn-ticket .stub em{font:normal .7rem 'EB Garamond',sans-serif;opacity:.7;margin-top:2px}
+.bn-ticket .tinfo{flex:1;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:12px 20px;font:500 .95rem/1.3 'EB Garamond',sans-serif}
+.bn-ticket .tinfo div{display:flex;gap:10px;align-items:center}
+.bn-ticket .tinfo svg{width:17px;height:17px;flex:none;color:#7a1224}
+.bn-evt .bn-btn{background:linear-gradient(#d4546a,#8e1b2e);color:#fbf3e6;box-shadow:0 8px 22px rgba(194,58,80,.35)}
+.bn-evt .bn-ghost{background:transparent;color:#d9d9e4;border:1px solid rgba(185,185,198,.7)}
+@media(max-width:520px){.bn-paper{padding:52px 26px 60px}.bn-evt-main{padding:44px 22px 48px}.bn-body{font-size:1.15rem}.bn-ticket{flex-direction:column}.bn-ticket .stub{border-right:0;border-bottom:2px dashed rgba(90,60,20,.45)}.bn-ticket .stub::before,.bn-ticket .stub::after{display:none}}
+
+/* the ✕ takes the top-right corner of the scroll, so that corner has no bracket */
+.bn-orn.tr{display:none}

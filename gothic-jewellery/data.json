@@ -1,0 +1,223 @@
+{
+  "site": {
+    "name": "Vesperthorn Atelier",
+    "tagline": "Gothic jewellers by candlelight",
+    "heroTitle": "Gothic jewellery forged in shadow and silver",
+    "heroText": "Rings, pendants, chokers and crosses cast from blackened silver and set with blood-dark stones. Step inside and meet the pieces of our collection.",
+    "aboutTitle": "Forged beneath the cathedral",
+    "aboutText": "In a candlelit workshop beneath the old abbey, each piece in our collection is sculpted in wax, cast in silver, and set by hand with garnet, onyx or moonstone. Ravens, bats, roses and thorns keep watch over every design. Visit our shop for polishing cloths, velvet caskets and other keepsakes of the night.",
+    "footer": "© Vesperthorn Atelier · Raven's Row, Whitby",
+    "contactEmail": "hello@vesperthorn.example",
+    "ctaText": "Fulfilled by 3D Services",
+    "ctaUrl": "",
+    "socialTitle": "Join the nocturnal circle",
+    "socialText": "New pieces, workshop glimpses and candlelit behind-the-scenes. Follow us where the shadows gather.",
+    "social": [
+      {
+        "name": "Instagram",
+        "handle": "@vesperthorn",
+        "url": "https://www.instagram.com/"
+      },
+      {
+        "name": "TikTok",
+        "handle": "@vesperthorn",
+        "url": "https://www.tiktok.com/"
+      },
+      {
+        "name": "YouTube",
+        "handle": "Vesperthorn Atelier",
+        "url": "https://www.youtube.com/"
+      },
+      {
+        "name": "Pinterest",
+        "handle": "vesperthorn",
+        "url": "https://www.pinterest.com/"
+      }
+    ]
+  },
+  "pieces": [
+    {
+      "id": "skull-ring",
+      "name": "Memento Mori Ring",
+      "metal": "Blackened silver",
+      "gemstone": "Garnet",
+      "size": "Ø 26mm",
+      "price": "€189.00",
+      "color": "#8f8f9a",
+      "description": "A grinning skull crowns a heavy oxidised band. Two garnet-dark hollows watch the wearer, a reminder that every hour is borrowed.",
+      "model": "/models/skull-ring.obj",
+      "type": "ring"
+    },
+    {
+      "id": "rose-ring",
+      "name": "Black Rose Ring",
+      "metal": "Antique silver",
+      "gemstone": "Black onyx",
+      "size": "Ø 24mm",
+      "price": "€149.00",
+      "color": "#a9a9b3",
+      "description": "A fully opened rose with thorns climbing the shoulders of the band. Beautiful, and not quite safe to hold.",
+      "model": "/models/rose-ring.obj",
+      "type": "ring"
+    },
+    {
+      "id": "raven-pendant",
+      "name": "Perched Raven Pendant",
+      "metal": "Oxidised silver",
+      "gemstone": "Jet",
+      "size": "52mm",
+      "price": "€129.00",
+      "color": "#5d5d68",
+      "description": "A raven in profile, cast with ruffled feathers and a polished jet eye. It carries secrets and keeps them.",
+      "model": "/models/raven-pendant.stl",
+      "type": "pendant"
+    },
+    {
+      "id": "bat-pendant",
+      "name": "Nocturne Bat Pendant",
+      "metal": "Gunmetal silver",
+      "gemstone": "Ruby",
+      "size": "58mm",
+      "price": "€119.00",
+      "color": "#7b7b87",
+      "description": "Scalloped wings spread wide beneath a tiny ruby heart. Light as a whisper, dark as the sky it was made for.",
+      "model": "/models/bat-pendant.obj",
+      "type": "pendant"
+    },
+    {
+      "id": "cathedral-cross",
+      "name": "Cathedral Cross",
+      "metal": "Sterling silver",
+      "gemstone": "Garnet",
+      "size": "48mm",
+      "price": "€159.00",
+      "color": "#c2c2cc",
+      "description": "A flared gothic cross with a garnet set at its crossing, inspired by the stone tracery of a ruined nave.",
+      "model": "/models/cathedral-cross.obj",
+      "type": "cross"
+    },
+    {
+      "id": "reliquary-cross",
+      "name": "Reliquary Cross",
+      "metal": "Burnished pewter",
+      "gemstone": "Moonstone",
+      "size": "62mm",
+      "price": "€209.00",
+      "color": "#9a8f8a",
+      "description": "Trefoil terminals and a haloed moonstone at the heart. Made to be worn over the heart, or kept in a velvet casket.",
+      "model": "/models/reliquary-cross.stl",
+      "type": "cross"
+    },
+    {
+      "id": "thorn-choker",
+      "name": "Briar Thorn Choker",
+      "metal": "Blackened silver",
+      "gemstone": "Obsidian",
+      "size": "Ø 125mm",
+      "price": "€169.00",
+      "color": "#4b4b55",
+      "description": "A ribbon of black velvet lined with silver thorns and a single obsidian teardrop at the throat.",
+      "model": "/models/thorn-choker.obj",
+      "type": "choker"
+    },
+    {
+      "id": "chain-choker",
+      "name": "Vesper Chain Choker",
+      "metal": "Antique silver",
+      "gemstone": "Amethyst",
+      "size": "Ø 130mm",
+      "price": "€139.00",
+      "color": "#b3b3bd",
+      "description": "Hand-linked chain that falls into a drop of dark amethyst. Wear it with black lace and moonlight.",
+      "model": "/models/chain-choker.obj",
+      "type": "choker"
+    }
+  ],
+  "shop": [
+    {
+      "id": "cloth",
+      "name": "Silver Polishing Cloth",
+      "price": "€12.00",
+      "color": "#b3b3bd",
+      "icon": "✦",
+      "description": "Soft, anti-tarnish cloth that keeps blackened silver glowing in the dark.",
+      "category": "accessories"
+    },
+    {
+      "id": "casket",
+      "name": "Velvet Reliquary Casket",
+      "price": "€39.00",
+      "color": "#6b1020",
+      "icon": "▣",
+      "description": "Burgundy velvet casket with a silver clasp, made to keep one precious piece safe.",
+      "category": "accessories"
+    },
+    {
+      "id": "pouches",
+      "name": "Anti-Tarnish Pouch Set",
+      "price": "€18.00",
+      "color": "#2c2c34",
+      "icon": "☾",
+      "description": "Three drawstring pouches in black cotton, lined to slow the creep of tarnish.",
+      "category": "accessories"
+    },
+    {
+      "id": "stand",
+      "name": "Cathedral Display Stand",
+      "price": "€45.00",
+      "color": "#8f8f9a",
+      "icon": "♜",
+      "description": "Wrought-iron stand shaped like a pointed arch, for pendants and chokers.",
+      "category": "accessories"
+    },
+    {
+      "id": "candle",
+      "name": "Black Wax Votive Candle",
+      "price": "€15.00",
+      "color": "#1c1416",
+      "icon": "✠",
+      "description": "Hand-poured votive in black wax, scented with incense, myrrh and old stone.",
+      "category": "misc"
+    },
+    {
+      "id": "ink",
+      "name": "Raven Quill & Ink Set",
+      "price": "€22.00",
+      "color": "#3a1d2a",
+      "icon": "✒",
+      "description": "Black feather quill, crimson ink and a sheet of aged paper for letters to the dead.",
+      "category": "misc"
+    }
+  ],
+  "banners": {
+    "announcement": {
+      "enabled": true,
+      "kicker": "Raven Post",
+      "title": "The Midnight Reliquary Opens",
+      "content": "Our newest collection of silver rings, pendants and chokers arrives with the long nights.\n\nVisit the shop for limited editions, and ask us about a bespoke commission.",
+      "icon": "raven",
+      "ctaText": "See the collection",
+      "ctaUrl": "/pieces.html",
+      "sparkles": true,
+      "raven": true,
+      "frequency": "session",
+      "delay": 3
+    },
+    "event": {
+      "enabled": true,
+      "kicker": "Candlelit Appearance",
+      "title": "Meet the Jeweller at the Whitby Night Market",
+      "content": "Try on rings and chokers by candlelight, watch a piece being set, and find the jewel that finds you.",
+      "icon": "cathedral",
+      "date": "2026-11-14",
+      "time": "19:00",
+      "location": "Abbey Cellars, Whitby",
+      "ctaText": "Reserve a fitting",
+      "ctaUrl": "",
+      "sparkles": true,
+      "bat": true,
+      "frequency": "session",
+      "delay": 3
+    }
+  }
+}

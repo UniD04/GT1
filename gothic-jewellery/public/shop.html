@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=UnifrakturCook:wght@700&display=swap">
+<link rel="stylesheet" href="/style.css"></head><body><main id="app"></main>
+<script src="/app.js"></script>
+<script>
+const TITLES = { accessories: ['Accessories', 'Care for, keep and display your jewellery.'], misc: ['Miscellaneous', 'Curious extras from the back of the shop.'] };
+loadData().then(d => {
+  chrome(d, 'shop');
+  const cat = new URLSearchParams(location.search).get('cat'), known = Object.hasOwn(TITLES, cat), [title, blurb] = (known && TITLES[cat]) || ['The Shop', 'Everything the gothic soul needs beyond the jewels.'];
+  document.title = title + ' · ' + d.site.name;
+  const list = d.shop.filter(p => !known || (p.category || 'accessories') === cat);
+  document.getElementById('app').innerHTML = `<section class="page-top"><div class="head"><div class="eyebrow">${esc(d.site.name)} shop</div><h2>${esc(title)}</h2><p>${esc(blurb)}</p></div>
+  <div class="chips"><a class="pill ${cat ? '' : 'on'}" href="/shop.html">All</a><a class="pill ${cat === 'accessories' ? 'on' : ''}" href="/shop.html?cat=accessories">Accessories</a><a class="pill ${cat === 'misc' ? 'on' : ''}" href="/shop.html?cat=misc">Misc</a></div>
+  <div class="grid">${list.map(p => `<div class="card">${heartBtn('shop:' + p.id)}<div class="pic" style="background:radial-gradient(circle at 50% 60%,${esc(safeColor(p.color, '#9a9aa6'))}55,var(--pic))">${safeUrl(p.image) ? `<img src="${esc(safeUrl(p.image))}" alt="${esc(p.name)}">` : `<span class="icon">${esc(p.icon || '✦')}</span>`}</div>
+    <div class="info"><div class="meta">${esc(p.price)}</div><h3>${esc(p.name)}</h3><p>${esc(p.description)}</p></div></div>`).join('') || '<p style="text-align:center;color:var(--mute);grid-column:1/-1">Nothing here yet.</p>'}</div></section>`;
+});
+</script></body></html>
