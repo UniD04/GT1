@@ -1,0 +1,175 @@
+{
+  "site": {
+    "name": "Ollivanders Wand Atelier",
+    "tagline": "Wandmakers since 382 B.C.",
+    "heroTitle": "Handcrafted wands that choose their wizard",
+    "heroText": "Every wand is shaped from rare woods and bound to a single magical core. Discover the models of our collection.",
+    "aboutTitle": "The wand chooses the wizard",
+    "aboutText": "For over two thousand years our family has studied the delicate magic of wandlore. Each model in our collection is carved by hand, balanced by feel, and paired with a core of unicorn hair, phoenix feather or dragon heartstring. Visit our shop for polishing kits, holsters and more.",
+    "footer": "© Ollivanders Wand Atelier · Diagon Alley, London",
+    "contactEmail": "hello@ollivanders-atelier.example",
+    "ctaText": "Fulfilled by 3D Services",
+    "ctaUrl": ""
+  },
+  "wands": [
+    {
+      "id": "elder",
+      "name": "The Elder Wand",
+      "wood": "Elder",
+      "core": "Thestral tail hair",
+      "length": "15\"",
+      "price": "€349.00",
+      "color": "#cfc9bd",
+      "description": "The most powerful wand ever made. Pale, knotted and unforgiving, it is said to be unbeatable in the hands of its master.",
+      "model": "/models/elder.stl",
+      "type": "replicas"
+    },
+    {
+      "id": "holly-phoenix",
+      "name": "Holly & Phoenix",
+      "wood": "Holly",
+      "core": "Phoenix feather",
+      "length": "11\"",
+      "price": "€129.00",
+      "color": "#8a5a3b",
+      "description": "Supple and spirited. A wand of protection, rarely drawn to those who are not brave of heart.",
+      "model": "/models/holly.obj",
+      "type": "replicas"
+    },
+    {
+      "id": "vine-dragon",
+      "name": "Vine & Dragon",
+      "wood": "Vine",
+      "core": "Dragon heartstring",
+      "length": "10¾\"",
+      "price": "€139.00",
+      "color": "#5b6b3a",
+      "description": "Chosen by those with hidden depths and a greater purpose. Powerful and quick to respond.",
+      "model": "/models/vine.obj",
+      "type": "replicas"
+    },
+    {
+      "id": "yew-phoenix",
+      "name": "Yew & Phoenix",
+      "wood": "Yew",
+      "core": "Phoenix feather",
+      "length": "13½\"",
+      "price": "€119.00",
+      "color": "#3d2a22",
+      "description": "A rare and formidable wand, for the bold who walk in the shadow of great destiny.",
+      "model": "/models/yew.obj",
+      "type": "simple"
+    },
+    {
+      "id": "willow-unicorn",
+      "name": "Willow & Unicorn",
+      "wood": "Willow",
+      "core": "Unicorn hair",
+      "length": "12\"",
+      "price": "€109.00",
+      "color": "#b98a54",
+      "description": "Slender and graceful, the willow wand heals — and is drawn to those with untapped potential.",
+      "model": "/models/willow.obj",
+      "type": "template"
+    },
+    {
+      "id": "cherry-dragon",
+      "name": "Cherry & Dragon",
+      "wood": "Cherry",
+      "core": "Dragon heartstring",
+      "length": "12¼\"",
+      "price": "€159.00",
+      "color": "#7a2e2a",
+      "description": "Dark red and deeply lustrous. An uncommon wand that favours the fiercely loyal.",
+      "model": "/models/cherry.stl",
+      "type": "custom"
+    }
+  ],
+  "shop": [
+    {
+      "id": "kit",
+      "name": "Wand Care Kit",
+      "price": "€24.00",
+      "color": "#b98a54",
+      "icon": "✦",
+      "description": "Beeswax polish, soft cloth and a pocket-size wand brush.",
+      "category": "accessories"
+    },
+    {
+      "id": "holster",
+      "name": "Leather Wand Holster",
+      "price": "€39.00",
+      "color": "#6b3f2a",
+      "icon": "⚔",
+      "description": "Hand-stitched leather holster that fits any wand up to 15 inches.",
+      "category": "accessories"
+    },
+    {
+      "id": "box",
+      "name": "Ollivanders Wand Box",
+      "price": "€18.00",
+      "color": "#3d3a52",
+      "icon": "▣",
+      "description": "Gift box lined with velvet, sealed with a gold wax crest.",
+      "category": "misc"
+    },
+    {
+      "id": "stand",
+      "name": "Brass Wand Stand",
+      "price": "€29.00",
+      "color": "#a8872e",
+      "icon": "♜",
+      "description": "Display your wand in style with this engraved brass stand.",
+      "category": "accessories"
+    },
+    {
+      "id": "ink",
+      "name": "Enchanted Ink Set",
+      "price": "€15.00",
+      "color": "#2c3e50",
+      "icon": "✒",
+      "description": "Quill, three inks and a parchment pad for correspondence.",
+      "category": "misc"
+    },
+    {
+      "id": "cloak",
+      "name": "Traveller's Cloak",
+      "price": "€89.00",
+      "color": "#2f2b27",
+      "icon": "☾",
+      "description": "Heavy wool cloak with silver clasp, perfect for the cold castle halls.",
+      "category": "accessories"
+    }
+  ],
+  "banners": {
+    "announcement": {
+      "enabled": true,
+      "kicker": "Owl Post",
+      "title": "The Winter Wand Fair Is Coming",
+      "content": "Our newest collection of handcrafted wands arrives this season.\n\nVisit the shop for limited editions, and ask us about a custom commission.",
+      "icon": "owl",
+      "ctaText": "See the wands",
+      "ctaUrl": "/wands.html",
+      "sparkles": true,
+      "owl": true,
+      "frequency": "session",
+      "delay": 3
+    },
+    "event": {
+      "enabled": true,
+      "kicker": "Wandmaker Appearance",
+      "title": "Meet the Wandmaker at Diagon Alley Market",
+      "content": "Live wand fittings, demonstrations and the chance to find the wand that chooses you.",
+      "icon": "castle",
+      "date": "2026-11-14",
+      "time": "14:00",
+      "location": "Diagon Alley Market Hall, London",
+      "ctaText": "Reserve a fitting",
+      "ctaUrl": "",
+      "sparkles": true,
+      "snitch": true,
+      "frequency": "session",
+      "delay": 3
+    }
+  }
+}

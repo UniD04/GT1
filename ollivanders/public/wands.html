@@ -1,0 +1,32 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wands</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"}}</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js" integrity="sha384-BXj4dUwqsTW7BsafEOy150542LwVf57RoKjTk3Ay1dXyFXRwipZgJWd1QKIxStwq" crossorigin="anonymous"></script>
+</head><body><main id="app"></main>
+<script src="/app.js"></script>
+<script type="module">
+import { initWandCards } from '/viewer.js';
+loadData().then(d => {
+  chrome(d, 'wands'); document.title = 'Wands · ' + d.site.name;
+  const TYPES = { All: 'All', simple: 'Simple', replicas: 'Replicas', template: 'Template', custom: 'Custom' };
+  const woods = Object.keys(TYPES);
+  document.getElementById('app').innerHTML = `<section class="page-top"><div class="head"><div class="eyebrow">The collection</div><h2>All wand models</h2>
+    <p>Real 3D models. Hover to spin, click to inspect.</p></div>
+    <div class="chips">${woods.map((w, i) => `<button class="pill ${i ? '' : 'on'}" data-w="${w}">${TYPES[w]}</button>`).join('')}</div>
+    <div class="grid" id="grid"></div></section>`;
+  const grid = document.getElementById('grid');
+  const show = wood => {
+    const list = d.wands.filter(w => wood === 'All' || (w.type || 'simple') === wood);
+    grid.innerHTML = list.map(wandCardHTML).join('') || '<p style="text-align:center;color:var(--mute);grid-column:1/-1">Nothing here yet.</p>';
+    initWandCards(grid, list);
+  };
+  document.querySelectorAll('.chips .pill').forEach(b => b.onclick = () => {
+    document.querySelectorAll('.chips .pill').forEach(x => x.classList.toggle('on', x === b)); if (b.dataset.w !== 'All') track('filter', b.dataset.w); show(b.dataset.w);
+  });
+  show('All');
+});
+</script></body></html>

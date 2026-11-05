@@ -1,0 +1,66 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wand</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/style.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"}}</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" integrity="sha384-g4NTh/Iv5PPU4xPyhEWqPcwtNXOvdaDI8LLnyYfyNZOjKJeYQyjzQ9X5275eBjpt" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" integrity="sha384-Z3REaz79l2IaAZqJsSABtTbhjgOUYyV3p90XNnAPCSHg3EMTz1fouunq9WZRtj3d" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js" integrity="sha384-BXj4dUwqsTW7BsafEOy150542LwVf57RoKjTk3Ay1dXyFXRwipZgJWd1QKIxStwq" crossorigin="anonymous"></script>
+</head><body><main id="app"></main>
+<script src="/app.js"></script>
+<script type="module">
+import { mountViewer, wandSnapshot } from '/viewer.js';
+
+// "13½\"", "10¾\"", "12 1/2 in", "30cm" -> inches (0 if it can't be read, which hides the ruler)
+const FRAC = { '½': .5, '¼': .25, '¾': .75, '⅛': .125, '⅜': .375, '⅝': .625, '⅞': .875, '⅓': 1 / 3, '⅔': 2 / 3 };
+function parseInches(s) {
+  s = String(s || ''); const num = s.match(/\d+(?:\.\d+)?/); if (!num) return 0;
+  let n = parseFloat(num[0]); const fr = s.match(/[½¼¾⅛⅜⅝⅞⅓⅔]/), sl = s.slice(num.index + num[0].length).match(/(\d+)\s*\/\s*(\d+)/);
+  if (fr) n += FRAC[fr[0]]; else if (sl && +sl[2]) n += +sl[1] / +sl[2];
+  return /cm/i.test(s) ? n / 2.54 : n;
+}
+/** Ruler under the picture: inches (with halves/quarters) along the bottom edge, centimetres along the top. Spans exactly the wand's length. */
+function buildRuler(bar, inches) {
+  const cmTotal = inches * 2.54, tick = (cls, left, h, edge) => { const t = document.createElement('i'); t.className = 'tk ' + cls; t.style.cssText = `left:${left}%;height:${h}px;${edge}:0`; bar.appendChild(t); };
+  const label = (txt, left, edge) => { const s = document.createElement('span'); s.className = 'tl'; s.textContent = txt; s.style.cssText = `left:${left}%;${edge}:${edge === 'top' ? 20 : 20}px`; bar.appendChild(s); };
+  for (let q = 0; q <= Math.floor(inches * 4); q++) {                         // inches, every quarter
+    const left = (q / 4 / inches) * 100, whole = q % 4 === 0;
+    tick('in', left, whole ? 22 : q % 2 === 0 ? 15 : 9, 'bottom'); if (whole) label(String(q / 4), left, 'bottom');
+  }
+  for (let h = 0; h <= Math.floor(cmTotal * 2); h++) {                        // centimetres, every half
+    const left = (h / 2 / cmTotal) * 100, whole = h % 2 === 0, five = whole && (h / 2) % 5 === 0;
+    tick('cm', left, five ? 20 : whole ? 13 : 7, 'top'); if (five) label(String(h / 2), left, 'top');
+  }
+}
+loadData().then(d => {
+  const w = d.wands.find(x => x.id === new URLSearchParams(location.search).get('id'));
+  chrome(d, 'wands');
+  document.title = (w ? w.name : 'Not found') + ' · ' + d.site.name;
+  // "Contact us" opens the visitor's email app, pre-filled with this wand (address is editable in the admin panel)
+  const mail = w && safeMail(d.site.contactEmail);
+  const contact = mail ? `mailto:${mail}?subject=${encodeURIComponent('Enquiry: ' + w.name)}&body=${encodeURIComponent(`Hello,\n\nI would like to know more about the ${w.name} (${w.wood}, ${w.core}, ${w.length}).\n`)}` : '';
+  document.getElementById('app').innerHTML = !w ? '<section class="page-top head"><h2>Wand not found</h2><a class="btn" href="/wands.html">All wands</a></section>' : `
+  <div class="detail"><div><div class="viewer" id="viewer"></div><p class="hint">Drag to rotate</p></div><div id="info">
+    <a class="back" href="/wands.html">← All wands</a>
+    <div class="eyebrow">Wand model</div><h1>${esc(w.name)}</h1><p style="color:var(--mute)">${esc(w.description)}</p>
+    <div class="spec"><b>Wood</b><span>${esc(w.wood)}</span><b>Core</b><span>${esc(w.core)}</span><b>Length</b><span>${esc(w.length)}</span></div>
+    ${w.price ? `<div class="price"><small>Price</small>${esc(w.price)}</div>` : ''}
+    <div class="actions"><a class="btn solid" id="shopBtn" href="/shop.html">Visit the shop</a>${contact ? `<a class="btn" id="contactBtn" href="${esc(contact)}">Contact us</a>` : ''}${heartBtn('wand:' + w.id)}</div></div></div>
+  <section class="showcase"><div class="eyebrow">Full length</div>
+    <div class="rulerbox"><img id="wandimg" alt="${esc(w.name)}, side view"><div class="ruler" id="ruler"><b class="u u-cm">cm</b><b class="u u-in">in</b></div></div>
+    <p class="hint">Actual proportions · ${esc(w.length)}</p></section>`;
+  if (!w) return;
+  // insights: which wand was viewed, and who clicked Contact us / Visit the shop from it
+  track('view', 'wand:' + w.id);
+  document.getElementById('contactBtn')?.addEventListener('click', () => track('contact', 'wand:' + w.id));
+  document.getElementById('shopBtn').addEventListener('click', () => track('shop', 'wand:' + w.id));
+  mountViewer(document.getElementById('viewer'), w, { controls: true, tilt: .25 });
+  const inches = parseInches(w.length), img = document.getElementById('wandimg');
+  if (inches > 0) buildRuler(document.getElementById('ruler'), inches); else document.getElementById('ruler').remove();
+  wandSnapshot(w).then(url => {
+    img.src = url;
+    gsap.from('.rulerbox', { opacity: 0, y: 30, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.rulerbox', start: 'top 90%', once: true } });
+  }).catch(e => { console.warn('Snapshot failed', e); img.replaceWith(Object.assign(document.createElement('div'), { innerHTML: art(w) }).firstChild); });
+  gsap.from('#info > *', { x: 40, opacity: 0, duration: .8, delay: .2, stagger: .1, ease: 'power3.out' });
+});
+</script></body></html>
